@@ -6,9 +6,9 @@ from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 from alembic import context
-from settings import settings
 from database import Base
 from question.models import Question
+from settings import settings
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -19,11 +19,22 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
+# add your model's MetaData object here
+# for 'autogenerate' support
+# from myapp import mymodel
+# target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata
+
 section = config.config_ini_section
-config.set_section_option(section, "POSTGRES_USER", settings().postgres_user)
-config.set_section_option(section, "POSTGRES_PASSWORD", settings().postgres_password)
-config.set_section_option(section, "POSTGRES_DB_NAME", settings().postgres_db_name)
+# config.set_section_option(section, "POSTGRES_USER", settings().postgres_user)
+# config.set_section_option(section, "POSTGRES_PASSWORD", settings().postgres_password)
+# config.set_section_option(section, "POSTGRES_DB_NAME", settings().postgres_db_name)
+config.set_main_option("sqlalchemy.url", settings().database_url)
+
+# other values from the config, defined by the needs of env.py,
+# can be acquired:
+# my_important_option = config.get_main_option("my_important_option")
+# ... etc.
 
 
 def run_migrations_offline():
